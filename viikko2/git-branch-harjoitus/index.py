@@ -5,6 +5,7 @@ from tulo import tulo
 
 logger("aloitetaan ohjelma")
 
+# Tehtävä 13. muutos 2
 x = int(input("luku 1: "))
 y = int(input("luku 2: "))
 print(f"{x} + {y} = {summa(x, y)}") 
