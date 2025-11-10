@@ -15,11 +15,12 @@ def main():
         players.append(player)
     
     country = "FIN"
-    print_players_from_country(players, country)
+    print_players_from_country_sorted_by_points(players, country)
 
 
-def print_players_from_country(players, country):
-    print(f"Players from {country}:")
+def print_players_from_country_sorted_by_points(players, country):
+    print(f"Players from {country}:\n")
+    players.sort(key=lambda player: player.points, reverse=True)
 
     for player in players:
         if player.nationality == country:
