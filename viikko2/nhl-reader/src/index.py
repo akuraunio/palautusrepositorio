@@ -1,7 +1,5 @@
-import requests
 from rich.console import Console
 from rich.table import Table
-from player import Player
 from player_reader import PlayerReader
 from player_stats import PlayerStats
 
