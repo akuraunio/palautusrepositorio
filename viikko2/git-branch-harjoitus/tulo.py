@@ -1,2 +1,2 @@
-def summa(x, y):
+def tulo(x, y):
     return x*y
