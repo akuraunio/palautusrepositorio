@@ -6,20 +6,13 @@ def main():
 
     print(game.get_score())
 
-    game.won_point("player1")
-    print(game.get_score())
+    def round(winner):
+        game.won_point(winner)
+        print(game.get_score())
 
-    game.won_point("player1")
-    print(game.get_score())
-
-    game.won_point("player2")
-    print(game.get_score())
-
-    game.won_point("player1")
-    print(game.get_score())
-
-    game.won_point("player1")
-    print(game.get_score())
+    round_winners = ["player1", "player1", "player1", "player1"]
+    for winner in round_winners:
+        round(winner)
 
 
 if __name__ == "__main__":
