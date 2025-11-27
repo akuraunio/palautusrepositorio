@@ -39,7 +39,7 @@ class TennisGame:
                 return "Advantage " + self.player1_name
             elif score_difference >= 2:
                 return "Win for " + self.player1_name
-
+            raise RuntimeError("Invalid state in overtime_score: score_difference={}, player1_score={}, player2_score={}".format(score_difference, self.player1_score, self.player2_score))
         if score_difference == 0:
             return tie_score()
         elif self.player1_score > 3 or self.player2_score > 3:
