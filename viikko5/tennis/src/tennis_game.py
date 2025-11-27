@@ -2,54 +2,47 @@ class TennisGame:
     def __init__(self, player1_name, player2_name):
         self.player1_name = player1_name
         self.player2_name = player2_name
-        self.m_score1 = 0
-        self.m_score2 = 0
+        self.player1_score = 0
+        self.player2_score = 0
 
     def won_point(self, player_name):
-        if player_name == "player1":
-            self.m_score1 = self.m_score1 + 1
+        if player_name == self.player1_name:
+            self.player1_score += 1
+        elif player_name == self.player2_name:
+            self.player2_score += 1
         else:
-            self.m_score2 = self.m_score2 + 1
+            raise ValueError(f"Invalid player name: {player_name}")
 
     def get_score(self):
-        score = ""
-        temp_score = 0
+        score_strings = {0: "Love", 1: "Fifteen", 2: "Thirty", 3: "Forty"}
+        score_difference = self.player1_score - self.player2_score
 
-        if self.m_score1 == self.m_score2:
-            if self.m_score1 == 0:
-                score = "Love-All"
-            elif self.m_score1 == 1:
-                score = "Fifteen-All"
-            elif self.m_score1 == 2:
-                score = "Thirty-All"
+        def tie_score():
+            if self.player1_score > 2:
+                return "Deuce"
             else:
-                score = "Deuce"
-        elif self.m_score1 >= 4 or self.m_score2 >= 4:
-            minus_result = self.m_score1 - self. m_score2
+                return score_strings[self.player1_score] + "-All"
 
-            if minus_result == 1:
-                score = "Advantage player1"
-            elif minus_result == -1:
-                score = "Advantage player2"
-            elif minus_result >= 2:
-                score = "Win for player1"
-            else:
-                score = "Win for player2"
+        def regulation_score():
+            return (
+                score_strings[self.player1_score]
+                + "-"
+                + score_strings[self.player2_score]
+            )
+
+        def overtime_score():
+            if score_difference == -1:
+                return "Advantage " + self.player2_name
+            elif score_difference <= -2:
+                return "Win for " + self.player2_name
+            elif score_difference == 1:
+                return "Advantage " + self.player1_name
+            elif score_difference >= 2:
+                return "Win for " + self.player1_name
+            raise RuntimeError("Invalid state in overtime_score: score_difference={}, player1_score={}, player2_score={}".format(score_difference, self.player1_score, self.player2_score))
+        if score_difference == 0:
+            return tie_score()
+        elif self.player1_score > 3 or self.player2_score > 3:
+            return overtime_score()
         else:
-            for i in range(1, 3):
-                if i == 1:
-                    temp_score = self.m_score1
-                else:
-                    score = score + "-"
-                    temp_score = self.m_score2
-
-                if temp_score == 0:
-                    score = score + "Love"
-                elif temp_score == 1:
-                    score = score + "Fifteen"
-                elif temp_score == 2:
-                    score = score + "Thirty"
-                elif temp_score == 3:
-                    score = score + "Forty"
-
-        return score
+            return regulation_score()
