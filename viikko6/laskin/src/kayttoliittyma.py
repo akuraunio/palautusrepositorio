@@ -15,7 +15,11 @@ class Summa:
         self._syote = syote
 
     def suorita(self):
+        self._kumoa_arvo = self._sovelluslogiikka.arvo()
         self._sovelluslogiikka.plus(self._syote())
+
+    def kumoa(self):
+        self._sovelluslogiikka.aseta_arvo(self._kumoa_arvo)
 
 
 class Erotus:
@@ -24,7 +28,11 @@ class Erotus:
         self._syote = syote
 
     def suorita(self):
+        self._kumoa_arvo = self._sovelluslogiikka.arvo()
         self._sovelluslogiikka.miinus(self._syote())
+
+    def kumoa(self):
+        self._sovelluslogiikka.aseta_arvo(self._kumoa_arvo)
 
 
 class Nollaus:
@@ -32,15 +40,23 @@ class Nollaus:
         self._sovelluslogiikka = sovelluslogiikka
 
     def suorita(self):
+        self._kumoa_arvo = self._sovelluslogiikka.arvo()
         self._sovelluslogiikka.nollaa()
+
+    def kumoa(self):
+        self._sovelluslogiikka.aseta_arvo(self._kumoa_arvo)
 
 
 class Kumoa:
     def __init__(self, sovelluslogiikka):
-        pass
+        self._sovelluslogiikka = sovelluslogiikka
+        self._edellinen_komento = None
+
+    def edellinen_komento(self, komento):
+        self._edellinen_komento = komento
 
     def suorita(self):
-        pass
+        self._edellinen_komento.kumoa()
 
 
 class Kayttoliittyma:
@@ -104,6 +120,9 @@ class Kayttoliittyma:
     def _suorita_komento(self, komento):
         komento_olio = self._komennot[komento]
         komento_olio.suorita()
+
+        if komento != Komento.KUMOA:
+            self._komennot[Komento.KUMOA]._edellinen_komento = self._komennot[komento]
 
         self._kumoa_painike["state"] = constants.NORMAL
 
