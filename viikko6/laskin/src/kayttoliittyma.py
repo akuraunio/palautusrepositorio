@@ -15,7 +15,7 @@ class Summa:
         self._syote = syote
 
     def suorita(self):
-        self._sovelluslogiikka.plus(self._syote)
+        self._sovelluslogiikka.plus(self._syote())
 
 
 class Erotus:
@@ -24,7 +24,7 @@ class Erotus:
         self._syote = syote
 
     def suorita(self):
-        self._sovelluslogiikka.miinus(self._syote)
+        self._sovelluslogiikka.miinus(self._syote())
 
 
 class Nollaus:
