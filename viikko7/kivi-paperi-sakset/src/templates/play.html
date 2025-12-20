@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kivi-Paperi-Sakset - {{ mode_name }}</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 700px;
+        width: 100%;
+        padding: 40px;
+      }
+
+      h1 {
+        color: #667eea;
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 2.2em;
+      }
+
+      .mode-name {
+        text-align: center;
+        color: #764ba2;
+        margin-bottom: 30px;
+        font-size: 1.2em;
+        font-weight: bold;
+      }
+
+      .score-board {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .score-board h2 {
+        margin-bottom: 10px;
+      }
+
+      .score-details {
+        font-size: 1.3em;
+        line-height: 1.6;
+        white-space: pre-line;
+      }
+
+      .last-move {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+      }
+
+      .last-move h3 {
+        color: #667eea;
+        margin-bottom: 15px;
+      }
+
+      .move-display {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .player-move,
+      .computer-move {
+        text-align: center;
+      }
+
+      .move-icon {
+        font-size: 4em;
+        margin-bottom: 10px;
+      }
+
+      .move-label {
+        font-weight: bold;
+        color: #666;
+      }
+
+      .vs {
+        font-size: 2em;
+        color: #764ba2;
+        font-weight: bold;
+      }
+
+      .result {
+        text-align: center;
+        font-size: 1.3em;
+        font-weight: bold;
+        color: #f5576c;
+        margin-top: 15px;
+      }
+
+      .controls {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+
+      .move-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 60px 40px;
+        border-radius: 15px;
+        font-size: 3em;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        min-width: 150px;
+      }
+
+      .move-button:hover:not(:disabled) {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+      }
+
+      .move-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .button-label {
+        display: block;
+        font-size: 0.3em;
+        margin-top: 10px;
+      }
+
+      .reset-button {
+        background: #f5576c;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 10px;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .reset-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(245, 87, 108, 0.4);
+      }
+
+      .game-over {
+        background: #ffd700;
+        color: #333;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1.3em;
+        font-weight: bold;
+      }
+
+      .instructions {
+        background: #e3f2fd;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        color: #1976d2;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🪨 📄 ✂️</h1>
+      <div class="mode-name">{{ mode_name }}</div>
+
+      {% if not game.game_over %}
+      <div class="instructions">
+        Valitse siirtosi: Kivi (k), Paperi (p) tai Sakset (s)<br />
+        Peli päättyy kun joku pelaaja saavuttaa 5 pistettä
+      </div>
+      {% endif %}
+
+      <div class="score-board">
+        <h2>Tulostaulukko</h2>
+        <div class="score-details">{{ game.get_score() }}</div>
+      </div>
+
+      {% if game.last_player_move %}
+      <div class="last-move">
+        <h3>Viimeisin kierros</h3>
+        <div class="move-display">
+          <div class="player-move">
+            <div class="move-icon">
+              {% if game.last_player_move == 'k' %}🪨 {% elif game.last_player_move == 'p' %}📄 {%
+              else %}✂️{% endif %}
+            </div>
+            <div class="move-label">Sinä</div>
+          </div>
+          <div class="vs">VS</div>
+          <div class="computer-move">
+            <div class="move-icon">
+              {% if game.last_computer_move == 'k' %}🪨 {% elif game.last_computer_move == 'p' %}📄
+              {% else %}✂️{% endif %}
+            </div>
+            <div class="move-label">Vastustaja</div>
+          </div>
+        </div>
+        {% if game.last_result %}
+        <div class="result">{{ game.last_result }}</div>
+        {% endif %}
+      </div>
+      {% endif %} {% if game.game_over %}
+      <div class="game-over">
+        {% if game.winner == "player" %} 🏆 Voitit pelin! Onnittelut! 🏆 {% elif game.winner ==
+        "computer" %} 🤖 Vastustaja voitti pelin! Yritä uudelleen! {% endif %}
+      </div>
+      {% endif %}
+
+      <form method="POST" action="/move">
+        <div class="controls">
+          <button
+            type="submit"
+            name="move"
+            value="k"
+            class="move-button"
+            {%
+            if
+            game.game_over
+            %}disabled{%
+            endif
+            %}>
+            🪨
+            <span class="button-label">Kivi</span>
+          </button>
+          <button
+            type="submit"
+            name="move"
+            value="p"
+            class="move-button"
+            {%
+            if
+            game.game_over
+            %}disabled{%
+            endif
+            %}>
+            📄
+            <span class="button-label">Paperi</span>
+          </button>
+          <button
+            type="submit"
+            name="move"
+            value="s"
+            class="move-button"
+            {%
+            if
+            game.game_over
+            %}disabled{%
+            endif
+            %}>
+            ✂️
+            <span class="button-label">Sakset</span>
+          </button>
+        </div>
+      </form>
+
+      <a href="/reset" style="text-decoration: none">
+        <button class="reset-button">🔄 Uusi peli</button>
+      </a>
+    </div>
+  </body>
+</html>
