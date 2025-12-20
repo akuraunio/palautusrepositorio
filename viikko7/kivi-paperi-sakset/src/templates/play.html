@@ -195,7 +195,7 @@
       {% if not game.game_over %}
       <div class="instructions">
         Valitse siirtosi: Kivi (k), Paperi (p) tai Sakset (s)<br />
-        Peli päättyy kun joku pelaaja saavuttaa 5 pistettä
+        Peli päättyy kun joku pelaaja saavuttaa 3 pistettä
       </div>
       {% endif %}
 
@@ -281,6 +281,38 @@
           </button>
         </div>
       </form>
+
+      {% if game.history and game.history|length > 0 %}
+      <div class="last-move" style="margin-top: 20px">
+        <h3>Siirtohistoria</h3>
+        <div style="margin-top: 10px">
+          {% for round in game.history|reverse %}
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              padding: 8px 0;
+              border-bottom: 1px solid #eee;
+            ">
+            <div style="flex: 1; display: flex; align-items: center; gap: 10px">
+              <span title="Sinä" style="font-size: 1.5em">
+                {% if round.player_move == 'k' %}🪨{% elif round.player_move == 'p' %}📄{% else
+                %}✂️{% endif %}
+              </span>
+              <span style="color: #666">vs</span>
+              <span title="Vastustaja" style="font-size: 1.5em">
+                {% if round.computer_move == 'k' %}🪨{% elif round.computer_move == 'p' %}📄{% else
+                %}✂️{% endif %}
+              </span>
+            </div>
+            <div style="flex: 1; color: #764ba2; font-weight: bold">{{ round.result }}</div>
+            <div style="flex: 1; text-align: right; color: #999">{{ round.score }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
 
       <a href="/reset" style="text-decoration: none">
         <button class="reset-button">🔄 Uusi peli</button>

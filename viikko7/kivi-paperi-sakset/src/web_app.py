@@ -13,7 +13,7 @@ games = {}
 class WebKiviPaperiSakset:
     """Web adapter for the existing game logic"""
 
-    WIN_SCORE = 5  # Game ends when a player reaches 5 points
+    WIN_SCORE = 3  # Game ends when a player reaches 3 points
 
     def __init__(self, game_instance):
         self.game = game_instance
@@ -23,6 +23,7 @@ class WebKiviPaperiSakset:
         self.last_player_move = None
         self.last_computer_move = None
         self.last_result = None
+        self.history = []  # list of dicts: {player_move, computer_move, result, score}
 
     def make_move(self, player_move):
         """Process a single move and return the result"""
@@ -52,6 +53,16 @@ class WebKiviPaperiSakset:
         elif self.tuomari.tokan_pisteet >= self.WIN_SCORE:
             self.game_over = True
             self.winner = "computer"
+
+        # Append round to history
+        self.history.append(
+            {
+                "player_move": self.last_player_move,
+                "computer_move": self.last_computer_move,
+                "result": self.last_result,
+                "score": str(self.tuomari),
+            }
+        )
 
         return {
             "player_move": self.last_player_move,
