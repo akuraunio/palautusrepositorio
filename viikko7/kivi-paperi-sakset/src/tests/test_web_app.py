@@ -13,6 +13,18 @@ def client():
 
 
 @pytest.fixture
+"""
+Pytest fixture that provides a Flask application context for testing.
+
+This fixture creates and yields a Flask app context, allowing tests to access
+the application instance and its context-dependent features (such as database
+connections, configuration, and request/application globals) within the fixture
+scope. The context is automatically cleaned up after each test that uses this
+fixture.
+
+Yields:
+    Flask: The Flask application instance with an active application context.
+"""
 def app_context():
     """Create an app context for testing"""
     with app.app_context():
